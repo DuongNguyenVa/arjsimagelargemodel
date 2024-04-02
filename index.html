@@ -1,23 +1,69 @@
-<!DOCTYPE html>
-<html>
-    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-    <!-- we import arjs version without NFT but with marker + location based support -->
-    <script src="https://raw.githack.com/AR-js-org/AR.js/dev/aframe/build/aframe-ar.js"></script>
-    <body style="margin : 0px; overflow: hidden;">
-        <a-scene embedded arjs>
-        <a-marker preset="hiro">
-            <a-entity
-            position="0 0 0"
-            rotation="90 0 180"
-            scale="0.05 0.05 0.05"
-            gltf-model="https://huggingface.co/duong123/nexttoroom/resolve/main/AR_MArbella_baked.gltf"
-            ></a-entity>
-        </a-marker>
-        <a-entity camera></a-entity>
-        </a-scene>
-    </body>
-</html>
+<script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1.3.0/dist/aframe-master.min.js"></script>
+<script src="./data/aframe/aframe-ar-nft.js"></script>
 
-<!-- gltf-model="https://huggingface.co/duong123/nexttoroom/resolve/main/AR_MArbella_baked.gltf" -->
+</script>
+<style>
+  .arjs-loader {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-<!-- gltf-model="../image-tracking/nft/trex/godzilla_2019_figurine_3d_scan.glb" -->
+  .arjs-loader div {
+    text-align: center;
+    font-size: 1.25em;
+    color: white;
+  }
+</style>
+
+<script>
+    var isFound=false;
+  AFRAME.registerComponent('markerhandler', {
+ init: function () {
+  console.log("start");
+
+   this.el.sceneEl.addEventListener('markerFound', (e) => {
+  console.log("found");
+    if(isFound==false){
+        window.open('https://duongnguyenva.github.io/penatyminigame/');
+        isFound=true;
+    }    
+   })
+   this.el.sceneEl.addEventListener('markerLost', (e) => { 
+    isFound=false;    
+    console.log("Lost");
+  })
+ }
+});
+</script>
+<body style='margin : 0px; overflow: hidden;'>
+   <!-- minimal loader shown until image descriptors are loaded -->
+  <div class="arjs-loader">
+    <div>Loading camera, please wait...</div>
+  </div>
+    <a-scene
+        vr-mode-ui='enabled: false;'
+        renderer="logarithmicDepthBuffer: true; precision: medium;"
+        embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'>
+        <a-nft
+        markerhandler
+            type='nft' url="./arjs_localFile_test/data/girl/girl"
+            smooth='true' smoothCount='10' smoothTolerance='0.01' smoothThreshold='5'>
+            <!-- <a-entity
+                gltf-model='./aframe/examples/image-tracking/nft/box2.glb'
+                scale="100 100 100"
+                position="400 0 -250"
+                rotation="90 00 0"
+                >
+            </a-entity> -->
+        </a-nft>
+		<a-entity camera></a-entity>
+    </a-scene>
+</body>
